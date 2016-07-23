@@ -18,8 +18,8 @@ const bufferStream = require('vinyl-buffer');
  * for use by the browser. Sourcemaps are created for debugging.
  */
 gulp.task('build-js', function () {
-	const sourceFile = './src/master.js';
-	const destFile = './build/master.js';
+	const sourceFile = './static/src/master.js';
+	const destFile = './static/build/master.js';
 	
 	return browserify(sourceFile, {debug: true /* provides sourcemaps */})
 		.bundle()
@@ -42,8 +42,8 @@ gulp.task('build-js', function () {
  * Sourcemaps are created for debugging.
  */
 gulp.task('build-css', function () {
-	const sourceFile = './src/master.scss';
-	const destFile = './build/master.css';
+	const sourceFile = './static/src/master.scss';
+	const destFile = './static/build/master.css';
 	
 	return gulp.src(sourceFile)
 		.pipe(sourcemaps.init())
@@ -81,7 +81,7 @@ gulp.task('default', ['build-css', 'build-js']);
  * add new files to be used, you'll need to re-run the task.
  */
 gulp.task('watch', ['default'], function () {
-	gulp.watch(['./src/**/*.scss', './src/**/*.css'], ['build-css']);
-	gulp.watch(['./src/**/*.js'], ['build-js']);
+	gulp.watch(['./static/src/**/*.scss', './static/src/**/*.css'], ['build-css']);
+	gulp.watch(['./static/src/**/*.js'], ['build-js']);
 	gulp.watch(['./node_modules/**/*.*'], ['default']);
 });
