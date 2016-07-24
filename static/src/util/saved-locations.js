@@ -1,6 +1,6 @@
 'use strict';
 var localStorage = window.localStorage;
-var KEY = 'savedLocations';
+var KEY = 'SavedLocations';
 
 /**
  * This module uses the LocalStorage API to persist your saved locations within

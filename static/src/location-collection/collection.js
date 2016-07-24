@@ -1,14 +1,14 @@
 'use strict';
 var Backbone = require('backbone');
 var LocationCollectionView = require('./view');
-var savedLocations = require('../util/saved-locations');
+var SavedLocations = require('../util/saved-locations');
 
 module.exports = Backbone.Collection.extend({
 	model: require('../location/model'),
 	
 	initialize: function () {
-		this.on('add', savedLocations.save);
-		this.on('remove', savedLocations.delete);
+		this.on('add', SavedLocations.save);
+		this.on('remove', SavedLocations.delete);
 	},
 	
 	// Creates an associated view (if one does not already exist), and appends

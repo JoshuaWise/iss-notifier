@@ -3,7 +3,7 @@ var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
 var LocationView = require('./view');
-var savedLocations = require('../util/saved-locations');
+var SavedLocations = require('../util/saved-locations');
 var ISS_PASS_API = 'http://api.open-notify.org/iss-pass.json';
 
 /**
@@ -32,7 +32,7 @@ module.exports = Backbone.Model.extend({
 	load: function () {
 		var self = this;
 		self.set(self.defaults);
-		savedLocations.update(self);
+		SavedLocations.update(self);
 		
 		$.ajax(ISS_PASS_API, {
 			dataType: 'jsonp', // Allows CORS
@@ -57,7 +57,7 @@ module.exports = Backbone.Model.extend({
 		})
 		.always(function () {
 			self.set('loaded', true);
-			savedLocations.update(self);
+			SavedLocations.update(self);
 		});
 	},
 	
