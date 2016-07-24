@@ -1,6 +1,6 @@
 {
-  "name": "sonicbids",
-  "description": "A coding challenge for a sonicbids interview.",
+  "name": "iss-notifier",
+  "description": "A simple webapp that allows you to see when the ISS will be overhead at specific locations.",
   "author": "J. Thomas Wise <joshuathomaswise@gmail.com>",
   "license": "UNLICENSED",
   "private": true,
