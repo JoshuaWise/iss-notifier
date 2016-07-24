@@ -2,10 +2,11 @@
 require('./settings');
 var SavedLocations = require('./util/saved-locations');
 var LocationCollection = require('./location-collection/collection');
+var CurrentLocation = require('./current-location/model');
 
-var locationList = new LocationCollection;
-locationList.appendTo('.left-side');
+var locations = new LocationCollection;
+locations.appendTo('.left-side');
+locations.set(SavedLocations.get());
 
-SavedLocations.get().forEach(function (location) {
-	locationList.push(location);
-});
+var currentLocation = new CurrentLocation;
+currentLocation.appendTo('.right-side');

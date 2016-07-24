@@ -83,5 +83,4 @@ gulp.task('default', ['build-css', 'build-js']);
 gulp.task('watch', ['default'], function () {
 	gulp.watch(['./static/src/**/*.scss', './static/src/**/*.css'], ['build-css']);
 	gulp.watch(['./static/src/**/*.js'], ['build-js']);
-	gulp.watch(['./node_modules/**/*.*'], ['default']);
 });

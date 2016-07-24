@@ -59,6 +59,7 @@ module.exports = Backbone.Model.extend({
 			self.set('loaded', true);
 			SavedLocations.update(self);
 		});
+		return this;
 	},
 	
 	// This is used to update what is shown to the user.
