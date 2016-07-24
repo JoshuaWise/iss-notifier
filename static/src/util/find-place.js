@@ -1,18 +1,18 @@
 'use strict';
-/**
- * This module uses the Google Maps API to transform street addresses into
- * latitude/longitude coordinates.
- */
 var $ = require('jquery');
 var GOOGLE_GEOCODING_API = 'https://maps.googleapis.com/maps/api/geocode/json';
 
+/**
+ * This function uses the Google Maps API to transform street addresses into
+ * latitude/longitude coordinates. The callback argument should be a
+ * Node.js-style (error-first) callback.
+ */
 module.exports = function (queryString, callback) {
 	if (typeof callback !== 'function') {
 		throw new TypeError('Expected second argument to be a function.');
 	}
-	$.getJSON(GOOGLE_GEOCODING_API, {
-		address: '' + queryString
-	})
+	
+	$.getJSON(GOOGLE_GEOCODING_API, {address: '' + queryString})
 	.done(function (response) {
 		if (response
 		&& response.results

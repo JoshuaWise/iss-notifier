@@ -2,6 +2,12 @@
 var localStorage = window.localStorage;
 var KEY = 'savedLocations';
 
+/**
+ * This module uses the LocalStorage API to persist your saved locations within
+ * the webapp.
+ */
+
+
 // Init the local store.
 (function () {
 	try {
@@ -15,8 +21,8 @@ var KEY = 'savedLocations';
 }());
 
 
-// Returns an array of the saved location objects. If an index is passed, the
-// object at that index is returned instead.
+// Returns an array of all persistent location objects. If an index is passed,
+// the object at that index is returned instead.
 exports.get = function (index) {
 	var array = JSON.parse(localStorage.getItem(KEY));
 	return index == null ? array.slice() : array[index];
