@@ -9,12 +9,14 @@ module.exports = Backbone.View.extend({
 	className: 'location-collection',
 	template: _.template(require('./template')),
 	events: {
-		'submit .new-location-form': 'submitNewLocation'
+		'submit .new-location-form': 'submitNewLocation',
+		'click .delete-location': 'clickDeleteLocation'
 	},
 	render: function () {
 		var ul = document.createElement('ul');
 		this.model.models.forEach(function (location) {
 			var li = document.createElement('li');
+			$('<div class="delete-location" aria-label="delete">X</div>').appendTo(li);
 			location.appendTo(li);
 			ul.appendChild(li);
 		});
@@ -47,5 +49,13 @@ module.exports = Backbone.View.extend({
 			coords.title = address;
 			this.model.push(coords);
 		}.bind(this));
+	},
+	
+	// Removes the adjacent Location object from the collection.
+	clickDeleteLocation: function (ev) {
+		var index = $(ev.target).closest('li').index();
+		var location = this.model.at(index);
+		location.remove();
+		this.model.removeItem(location);
 	}
 });

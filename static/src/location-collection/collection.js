@@ -32,5 +32,7 @@ module.exports = Backbone.Collection.extend({
 			clearInterval(this.timer);
 		}
 		return this;
-	}
+	},
+	
+	removeItem: Backbone.Collection.prototype.remove
 });

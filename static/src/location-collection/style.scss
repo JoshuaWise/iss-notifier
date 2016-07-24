@@ -3,6 +3,26 @@
 		margin: 0;
 		padding: 0;
 		list-style-type: none;
+		> li {
+			position: relative;
+		}
+	}
+	.delete-location {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 4px;
+		background: #ccc;
+		color: $failure-color;
+		font-weight: 700;
+		transition: all 0.35s;
+		cursor: pointer;
+		z-index: 1;
+		&:hover {
+			background-color: $failure-color;
+			color: $background-color;
+		}
 	}
 	.new-location-form {
 		$bg-color: #ebebeb;
