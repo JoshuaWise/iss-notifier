@@ -4,59 +4,67 @@ var Backbone = require('backbone');
 var LocationView = require('./view');
 var ISS_PASS_API = 'http://api.open-notify.org/iss-pass.json';
 
+/**
+ * Instances of Location should be constructed with the following attributes:
+ * - lat	... latitude of the location
+ * - lon 	... longitude of the location
+ * - title 	... the user-defined name of the location
+ */
 module.exports = Backbone.Model.extend({
 	defaults: {
-		lat: 0,
-		lon: 0,
-		title: 'Untitled',
-		message: 'Loading...',
+		message: '',
+		loaded: false,
 		nextPass: NaN, // Epoch timestamp
-		nextPassDuration: NaN // Milliseconds
+		nextPassDuration: NaN, // Milliseconds
+		timer: null
 	},
+	
+	// When an instance is created, it must retrieve the `nextPass` data from
+	// the API endpoint. If something goes wrong, an error will be logged.
 	initialize: function () {
 		var self = this;
 		
-		if (self.get('nextPass')) {
-			self.updateMessage();
+		if (self.get('loaded')) {
 			return;
 		}
 		
-		// Load the nextPass data from the API endpoint
-		$.get(ISS_PASS_API, {
-			lat: +self.get('lat'),
-			lon: +self.get('lon'),
-			n: 1 // Retreive only 1 predicted pass
+		$.ajax(ISS_PASS_API, {
+			dataType: 'jsonp', // Allows CORS
+			data: {
+				lat: +self.get('lat'),
+				lon: +self.get('lon'),
+				n: 1 // Retreive only 1 predicted pass
+			}
 		})
 		.done(function (result) {
-			if (result
-			&& result.response
-			&& result.response[0]
-			&& result.response[0].risetime
-			&& result.response[0].duration) {
+			if (result && result.response && result.response[0]) {
 				self.set({
-					nextPass: result.response[0].risetime,
-					nextPassDuration: result.response[0].duration
+					nextPass: result.response[0].risetime * 1000,
+					nextPassDuration: result.response[0].duration * 1000
 				});
 			} else {
 				console.error('Unexpected API result:', result);
 			}
 		})
 		.fail(function (jqXHR, textStatus, err) {
-			console.error(String(err));
+			console.error('Failed to access API:', err);
 		})
 		.always(function () {
-			self.updateMessage();
+			self.set('loaded', true);
 		});
 	},
+	
+	// This is used by the model periodically to change what is shown to the
+	// user.
 	updateMessage: function () {
-		var timeLeft = this.get('nextPass') - Date.now();
+		var timeLeft = (this.get('nextPass') - Date.now()) / 1000;
 		if (isNaN(timeLeft)) {
-			this.set('message', '[Error]');
+			this.set('message', this.get('loaded') ? '[Error]' : 'Loading...');
 		} else {
-			var daysLeft = Math.floor(timeLeft / 86400000);
-			var hoursLeft = Math.floor(timeLeft / 3600000 - daysLeft * 24);
-			var minutesLeft = Math.floor(timeLeft / 60000 - daysLeft * 24 - hoursLeft * 60);
-			var secondsLeft = Math.floor(timeLeft / 1000 - daysLeft * 24 - hoursLeft * 60 - minutesLeft * 60);
+			var daysLeft = Math.floor(timeLeft / 86400);
+			var hoursLeft = Math.floor(timeLeft / 3600 - daysLeft * 24);
+			var minutesLeft = Math.floor(timeLeft / 60 - daysLeft * 1440 - hoursLeft * 60);
+			var secondsLeft = Math.floor(timeLeft - daysLeft * 86400 - hoursLeft * 3600 - minutesLeft * 60);
 			var message = [];
 			daysLeft >= 1 && message.push(daysLeft + ' days');
 			hoursLeft >= 1 && message.push(hoursLeft + ' hours');
@@ -66,17 +74,27 @@ module.exports = Backbone.Model.extend({
 		}
 		return this;
 	},
+	
+	// Creates an associated view (if one does not already exist), and appends
+	// it to the specified element or jQuery selector.
 	appendTo: function (elementOrSelector) {
+		this.updateMessage();
+		this.set('timer', setInterval(this.updateMessage.bind(this), 1000));
+		
 		var view = this.view;
 		if (!view) {
 			view = this.view = new LocationView({model: this});
 		}
+		
 		view.render();
 		view.$el.appendTo(elementOrSelector);
 		return this;
 	},
+	
+	// Removes the associated view from the DOM.
 	remove: function () {
 		this.view && this.view.remove();
+		clearInterval(this.get('timer'));
 		return this;
 	}
 });
