@@ -1,1 +1,20 @@
+@import 'normalize.css/normalize';
+@import './globals';
+@import './theme';
+@import './location/style';
+@import './location-collection/style';
 
+.row {
+	position: relative;
+	overflow: hidden;
+	max-width: nth($desktop-range, 1);
+	margin: auto;
+	> .column {
+		padding: 0 1rem;
+		@media #{$booklet} {
+			padding: 0 1.5rem;
+			width: 50%;
+			float: left;
+		}
+	}
+}

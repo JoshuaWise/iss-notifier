@@ -1,0 +1,68 @@
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 16px;
+}
+
+body {
+	min-height: 100vh;
+	background: $background-color;
+	color: $foreground-color;
+	font-family: 'Helvetica Neue', Helvetica, sans-serif;
+	line-height: 1.5;
+}
+
+a {
+	color: $primary-color;
+	cursor: pointer;
+	transition: all 0.3s;
+	&:hover {
+		color: $secondary-color;
+	}
+}
+
+img {
+	display: inline-block;
+	height: auto;
+	max-width: 100%;
+}
+
+p {
+	color: inherit;
+	font-family: inherit;
+	font-size: 1em;
+	font-weight: inherit;
+	font-style: inherit;
+	line-height: inherit;
+}
+
+p, ul, ol {
+	margin: $paragraph-margin;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+h1 {font-size: 3em; text-align: center;}
+h2 {font-size: 2.66667em;}
+h3 {font-size: 2em;}
+h4 {font-size: 1.33333em;}
+h5 {font-size: 1em;}
+h6 {font-size: 0.8em;}
+
+@media #{$booklet} {
+	h1 {font-size: 4.5em;}
+	h2 {font-size: 4em;}
+	h3 {font-size: 3em;}
+	h4 {font-size: 2em;}
+	h5 {font-size: 1.5em;}
+	h6 {font-size: 1.2em;}
+}
+
+@media #{$desktop} {
+	h1 {font-size: 6em;}
+}

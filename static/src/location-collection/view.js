@@ -6,7 +6,9 @@ module.exports = Backbone.View.extend({
 	render: function () {
 		var ul = document.createElement('ul');
 		this.model.models.forEach(function (location) {
-			location.appendTo(ul);
+			var li = document.createElement('li');
+			location.appendTo(li);
+			ul.appendChild(li);
 		});
 		this.$el.html('').append(ul);
 		return this;

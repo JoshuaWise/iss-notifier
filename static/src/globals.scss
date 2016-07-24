@@ -1,0 +1,21 @@
+$phone-range: 320px 768px;
+$desktop-range: 1201px 1920px;
+$tablet-range: nth($phone-range, 2) nth($desktop-range, 1);
+
+$primary-color: #e5432a;
+$secondary-color: #2aa3e5;
+$success-color: #2aa3e5;
+$failure-color: #e52a2a;
+$disabled-color: #8e8e8e;
+
+$background-color: #fff;
+$foreground-color: #333;
+
+$paragraph-margin: 1.25em 0;
+$heading-margin: 0.5em 0;
+
+$phone: "screen and (max-width: #{nth($phone-range, 2) - 0.1px})";
+$mobile: "screen and (max-width: #{nth($tablet-range, 2) - 0.1px})";
+$tablet: "screen and (min-width: #{nth($tablet-range, 1)}) and (max-width: #{nth($tablet-range, 2) - 0.1px})";
+$booklet: "(min-width: #{nth($tablet-range, 1)}), print";
+$desktop: "(min-width: #{nth($desktop-range, 1)}), print";
