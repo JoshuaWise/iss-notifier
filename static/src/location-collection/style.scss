@@ -4,4 +4,44 @@
 		padding: 0;
 		list-style-type: none;
 	}
+	.new-location-form {
+		$bg-color: #ebebeb;
+		display: flex;
+		position: relative;
+		margin-bottom: 2rem;
+		input[type="text"] {
+			all: unset;
+			flex: 1;
+			background: $bg-color;
+			padding: 0.5rem 1rem;
+			cursor: text;
+			color: #555;
+		}
+		input[type="submit"] {
+			// Hide actual submit button; style the label instead
+			width: 0.1px;
+			height: 0.1px;
+			opacity: 0;
+			overflow: hidden;
+			position: absolute;
+			z-index: -1;
+		}
+		.overlay {
+			display: none;
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			background-color: $bg-color;
+			padding: 0.5rem 1rem;
+			color: $disabled-color;
+			cursor: default;
+		}
+		&.loading {
+			.overlay {
+				display: block
+			}
+		}
+	}
 }

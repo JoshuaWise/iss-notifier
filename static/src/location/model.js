@@ -24,6 +24,7 @@ module.exports = Backbone.Model.extend({
 		var self = this;
 		
 		if (self.get('loaded')) {
+			this.trigger('loaded');
 			return;
 		}
 		
@@ -50,6 +51,7 @@ module.exports = Backbone.Model.extend({
 		})
 		.always(function () {
 			self.set('loaded', true);
+			self.trigger('loaded');
 		});
 	},
 	

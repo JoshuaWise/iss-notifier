@@ -1,8 +1,13 @@
 .location {
+	background: #ebebeb;
+	margin-bottom: 2rem;
+	padding: 2rem;
 	.title {
 		font-weight: bold;
+		margin: 0;
 	}
-	.eta {
-		color: $primary-color;
+	.message {
+		font-weight: bold;
+		color: $secondary-color;
 	}
 }

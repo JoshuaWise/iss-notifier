@@ -24,7 +24,7 @@ module.exports = function (queryString, callback) {
 				lon: response.results[0].geometry.location.lng
 			});
 		} else {
-			callback(new Error('Unexpected response.'));
+			callback(new Error('Unexpected response:\n' + JSON.stringify(response, null, 4)));
 		}
 	})
 	.fail(function (jqXHR, textStatus, err) {

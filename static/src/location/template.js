@@ -1,4 +1,4 @@
 module.exports = '\
-<span class="title">{{ title }}</span> \
-Next pass: <span class="eta">{{ message }}</span>\
+<h4 class="title">{{ title }}</h4>\
+<div class="message">{{ message }}</div>\
 ';

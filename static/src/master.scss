@@ -3,6 +3,7 @@
 @import './theme';
 @import './location/style';
 @import './location-collection/style';
+@import './alert/style';
 
 .row {
 	position: relative;
@@ -10,11 +11,24 @@
 	max-width: nth($desktop-range, 1);
 	margin: auto;
 	> .column {
-		padding: 0 1rem;
+		border-left: 1rem solid transparent;
+		border-right: 1rem solid transparent;
 		@media #{$booklet} {
-			padding: 0 1.5rem;
+			border-left-width: 1.5rem;
+			border-right-width: 1.5rem;
 			width: 50%;
 			float: left;
 		}
+	}
+}
+
+.button {
+	background: $secondary-color;
+	color: $background-color;
+	padding: 0.5rem 1rem;
+	cursor: pointer;
+	transition: background-color 0.35s;
+	&:hover {
+		background: darken($secondary-color, 12%);
 	}
 }
