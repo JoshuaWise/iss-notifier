@@ -1,9 +1,15 @@
 'use strict';
 require('./settings');
 
-var location = new (require('./location/model'))({title: 'foo', lat: 51.5032510, lon: -0.1278950});
-location.appendTo('body');
+var list = new (require('./location-collection/collection'))();
+list.appendTo('body');
 
-require('./find-location')('408 130th St, New York, NY', function (err, result) {
-	console.log(err || result);
+require('./util/find-place')('408 130th St, New York, NY', function (err, result) {
+	result.title = 'foo';
+	list.push(result);
+});
+
+require('./util/find-place')('57 Elm Street, Somerville, MA', function (err, result) {
+	result.title = 'bar';
+	list.push(result);
 });

@@ -16,7 +16,6 @@ module.exports = Backbone.Model.extend({
 		loaded: false,
 		nextPass: NaN, // Epoch timestamp
 		nextPassDuration: NaN, // Milliseconds
-		timer: null
 	},
 	
 	// When an instance is created, it must retrieve the `nextPass` data from
@@ -54,8 +53,7 @@ module.exports = Backbone.Model.extend({
 		});
 	},
 	
-	// This is used by the model periodically to change what is shown to the
-	// user.
+	// This is used to update what is shown to the user.
 	updateMessage: function () {
 		var timeLeft = (this.get('nextPass') - Date.now()) / 1000;
 		if (isNaN(timeLeft)) {
@@ -78,23 +76,21 @@ module.exports = Backbone.Model.extend({
 	// Creates an associated view (if one does not already exist), and appends
 	// it to the specified element or jQuery selector.
 	appendTo: function (elementOrSelector) {
-		this.updateMessage();
-		this.set('timer', setInterval(this.updateMessage.bind(this), 1000));
-		
-		var view = this.view;
-		if (!view) {
-			view = this.view = new LocationView({model: this});
+		if (!this.view) {
+			this.view = new LocationView({model: this});
+			this.updateMessage();
+			this.view.render();
 		}
-		
-		view.render();
-		view.$el.appendTo(elementOrSelector);
+		this.view.$el.appendTo(elementOrSelector);
 		return this;
 	},
 	
 	// Removes the associated view from the DOM.
 	remove: function () {
-		this.view && this.view.remove();
-		clearInterval(this.get('timer'));
+		if (this.view) {
+			this.view.remove();
+			this.view = undefined;
+		}
 		return this;
 	}
 });
