@@ -1,0 +1,15 @@
+#alert-area {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	.alert {
+		display: none;
+		background: $failure-color;
+		color: $background-color;
+		font-weight: 700;
+		font-size: 1.4em;
+		padding: 1rem 2rem;
+		cursor: pointer;
+	}
+}

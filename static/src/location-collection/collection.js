@@ -1,9 +1,15 @@
 'use strict';
 var Backbone = require('backbone');
 var LocationCollectionView = require('./view');
+var savedLocations = require('../util/saved-locations');
 
 module.exports = Backbone.Collection.extend({
 	model: require('../location/model'),
+	
+	initialize: function () {
+		this.on('add', savedLocations.save);
+		this.on('remove', savedLocations.delete);
+	},
 	
 	// Creates an associated view (if one does not already exist), and appends
 	// it to the specified element or jQuery selector.
@@ -34,5 +40,9 @@ module.exports = Backbone.Collection.extend({
 		return this;
 	},
 	
-	removeItem: Backbone.Collection.prototype.remove
+	removeItem: function (index) {
+		var item = this.at(index >>> 0);
+		item.remove();
+		Backbone.Collection.prototype.remove.call(this, item);
+	}
 });

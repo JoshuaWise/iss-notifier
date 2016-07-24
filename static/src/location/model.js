@@ -1,7 +1,9 @@
 'use strict';
 var $ = require('jquery');
+var _ = require('underscore');
 var Backbone = require('backbone');
 var LocationView = require('./view');
+var savedLocations = require('../util/saved-locations');
 var ISS_PASS_API = 'http://api.open-notify.org/iss-pass.json';
 
 /**
@@ -18,22 +20,26 @@ module.exports = Backbone.Model.extend({
 		nextPassDuration: NaN, // Milliseconds
 	},
 	
-	// When an instance is created, it must retrieve the `nextPass` data from
-	// the API endpoint. If something goes wrong, an error will be logged.
 	initialize: function () {
-		var self = this;
-		
-		if (self.get('loaded')) {
-			this.trigger('loaded');
-			return;
+		if (!this.has('lsid')) {
+			this.set('lsid', _.uniqueId(Date.now().toString()));
 		}
+		if (!this.get('loaded')) {
+			this.load();
+		}
+	},
+	
+	load: function () {
+		var self = this;
+		self.set(self.defaults);
+		savedLocations.update(self);
 		
 		$.ajax(ISS_PASS_API, {
 			dataType: 'jsonp', // Allows CORS
 			data: {
 				lat: +self.get('lat'),
 				lon: +self.get('lon'),
-				n: 1 // Retreive only 1 predicted pass
+				n: 2 // For some odd reason, the API is returning a number of passes equal to this number minus 1.
 			}
 		})
 		.done(function (result) {
@@ -51,26 +57,22 @@ module.exports = Backbone.Model.extend({
 		})
 		.always(function () {
 			self.set('loaded', true);
-			self.trigger('loaded');
+			savedLocations.update(self);
 		});
 	},
 	
 	// This is used to update what is shown to the user.
 	updateMessage: function () {
 		var timeLeft = (this.get('nextPass') - Date.now()) / 1000;
+		var duration = this.get('nextPassDuration');
 		if (isNaN(timeLeft)) {
 			this.set('message', this.get('loaded') ? '[Error]' : 'Loading...');
+		} else if (timeLeft >= 0) {
+			this.set('message', 'ETA: ' + formatDuration(timeLeft));
+		} else if (duration > -timeLeft) {
+			this.set('message', 'Currently overhead for: ' + formatDuration(duration + timeLeft));
 		} else {
-			var daysLeft = Math.floor(timeLeft / 86400);
-			var hoursLeft = Math.floor(timeLeft / 3600 - daysLeft * 24);
-			var minutesLeft = Math.floor(timeLeft / 60 - daysLeft * 1440 - hoursLeft * 60);
-			var secondsLeft = Math.floor(timeLeft - daysLeft * 86400 - hoursLeft * 3600 - minutesLeft * 60);
-			var message = [];
-			daysLeft >= 1 && message.push(daysLeft + ' days');
-			hoursLeft >= 1 && message.push(hoursLeft + ' hours');
-			minutesLeft >= 1 && message.push(minutesLeft + ' minutes');
-			message.push(secondsLeft + ' seconds');
-			this.set('message', message.join(', '));
+			this.load(); // Retreive a new `nextPass` time.
 		}
 		return this;
 	},
@@ -96,3 +98,16 @@ module.exports = Backbone.Model.extend({
 		return this;
 	}
 });
+
+function formatDuration(totalSeconds) {
+	var days = Math.floor(totalSeconds / 86400);
+	var hours = Math.floor(totalSeconds / 3600 - days * 24);
+	var minutes = Math.floor(totalSeconds / 60 - days * 1440 - hours * 60);
+	var seconds = Math.floor(totalSeconds - days * 86400 - hours * 3600 - minutes * 60);
+	var message = [];
+	days >= 1 && message.push(days + ' days');
+	hours >= 1 && message.push(hours + ' hours');
+	minutes >= 1 && message.push(minutes + ' minutes');
+	message.push(seconds + ' seconds');
+	return message.join(', ');
+}

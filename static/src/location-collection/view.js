@@ -53,9 +53,6 @@ module.exports = Backbone.View.extend({
 	
 	// Removes the adjacent Location object from the collection.
 	clickDeleteLocation: function (ev) {
-		var index = $(ev.target).closest('li').index();
-		var location = this.model.at(index);
-		location.remove();
-		this.model.removeItem(location);
+		this.model.removeItem($(ev.target).closest('li').index());
 	}
 });
